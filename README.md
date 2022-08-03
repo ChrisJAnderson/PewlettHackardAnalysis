@@ -18,46 +18,48 @@
  One additional question I would like answered in this analysis is staff eligible for taking up the two missing management positions. To do this, I'll write two queries- the first to find out which of our managers are set to retire, and the second to assemble a list of employees eligible for promotion who are not eligible for retirement.
  The first query we use is this:
  >select ut.first_name,
- >ut.last_name,
- >dm.dept_no,
- >d.dept_name
- >into retiring_managers
- >from unique_titles as ut
- >inner join dept_emp as dm
- >on(ut.emp_no=dm.emp_no)
- >inner join departments as d
- >on (dm.dept_no=d.dept_no)
- >where (ut.title='Manager');
+ ut.last_name,
+ dm.dept_no,
+ d.dept_name
+ into retiring_managers
+ from unique_titles as ut
+ inner join dept_emp as dm
+ on(ut.emp_no=dm.emp_no)
+ inner join departments as d
+ on (dm.dept_no=d.dept_no)
+ where (ut.title='Manager');
+ 
  This query extracts the first name, last name, department number, and department name for our retiring managers and shows us the two positions that need to be filled: Manager of Sales and Manager of Research.
 
  To find out who can fill these positions we make another two queries to the database, which read as follows: 
 >select ce.emp_no,
->ce.first_name, 
->ce.last_name,
->de.dept_no,
->e.hire_date
->into d007_manager_candidates 
->from current_emp as ce
->inner join dept_emp as de 
->on(ce.emp_no=de.emp_no)
->inner join employees as e
->on (ce.emp_no=de.emp_no)
->where (e.hire_date between '1990-01-01' and '2005-12-31')
->	and(de.dept_no='d007')
->	and (de.to_date='9999-01-01')
+ce.first_name, 
+ce.last_name,
+de.dept_no,
+e.hire_date
+into d007_manager_candidates 
+from current_emp as ce
+inner join dept_emp as de 
+on(ce.emp_no=de.emp_no)
+inner join employees as e
+on (ce.emp_no=de.emp_no)
+where (e.hire_date between '1990-01-01' and '2005-12-31')
+	and(de.dept_no='d007')
+	and (de.to_date='9999-01-01')
 
 >select ce.emp_no,
->ce.first_name, 
->ce.last_name,
->de.dept_no,
->e.hire_date
->into d008_manager_candidates 
->from current_emp as ce
->inner join dept_emp as de 
->on(ce.emp_no=de.emp_no)
->inner join employees as e
->on (ce.emp_no=de.emp_no)
->where (e.hire_date between '1990-01-01' and '2005-12-31')
-	>and(de.dept_no='d008')
-	>and (de.to_date='9999-01-01')
+ce.first_name, 
+ce.last_name,
+de.dept_no,
+e.hire_date
+into d008_manager_candidates 
+from current_emp as ce
+inner join dept_emp as de 
+on(ce.emp_no=de.emp_no)
+inner join employees as e
+on (ce.emp_no=de.emp_no)
+where (e.hire_date between '1990-01-01' and '2005-12-31')
+	and(de.dept_no='d008')
+	and (de.to_date='9999-01-01')
+
 Unfortunately, running these queries crashed my pgadmin, so perhaps the best course of action is just to ask our retiring Managers of Sales and Research who they recommend for a replacement.
